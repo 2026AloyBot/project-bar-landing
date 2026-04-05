@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Bar — Support for Barristers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1a2c4e;
+      --navy-light: #243560;
+      --gold: #c9a84c;
+      --gold-light: #e8c96a;
+      --white: #ffffff;
+      --gray-50: #f8f9fb;
+      --gray-100: #f0f2f5;
+      --gray-200: #e2e6ec;
+      --gray-400: #9aa3b0;
+      --gray-600: #5a6478;
+      --gray-800: #2d3548;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--gray-800);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--navy);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-cta {
+      background: var(--navy);
+      color: var(--white);
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--navy-light); }
+
+    /* HERO */
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 6rem 2rem 5rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(201,168,76,0.15);
+      color: var(--gold-light);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      max-width: 720px;
+      margin: 0 auto 1.25rem;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+    .hero p {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.85rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      padding: 0.85rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      transition: border-color 0.2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.7); }
+
+    /* TRUST BAR */
+    .trust-bar {
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .trust-bar p {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .trust-logos {
+      display: flex;
+      gap: 2.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .trust-logos span {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+
+    /* PROBLEM / SOLUTION */
+    .section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .section h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+    .section p.sub {
+      font-size: 1.05rem;
+      color: var(--gray-600);
+      max-width: 580px;
+      margin-bottom: 3rem;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 700px) {
+      .split-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      margin-bottom: 1.25rem;
+    }
+    .card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .card ul li {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      padding-left: 1.25rem;
+      position: relative;
+    }
+    .card ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* SERVICES */
+    .bg-light { background: var(--gray-50); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    @media (max-width: 800px) {
+      .services-grid { grid-template-columns: 1fr; }
+    }
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 1.75rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .service-card:hover {
+      box-shadow: 0 8px 24px rgba(26,44,78,0.08);
+      transform: translateY(-2px);
+    }
+    .service-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(26,44,78,0.07);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .service-card h3 {
+      font-size: 0.975rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .service-card p {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      line-height: 1.55;
+    }
+
+    /* PRICING */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      align-items: start;
+    }
+    @media (max-width: 800px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+    }
+    .price-card {
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+    .price-card.popular {
+      border-color: var(--navy);
+      box-shadow: 0 8px 32px rgba(26,44,78,0.12);
+    }
+    .price-card.popular .popular-badge {
+      display: block;
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--navy);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 100px;
+    }
+    .popular-badge { display: none; }
+    .price-card h3 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gray-600);
+      margin-bottom: 0.5rem;
+    }
+    .price-card .price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .price-card .price sub { font-size: 1rem; font-weight: 500; color: var(--gray-400); }
+    .price-card .per { font-size: 0.85rem; color: var(--gray-400); margin-bottom: 1.5rem; }
+    .price-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.75rem;
+    }
+    .price-card ul li {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .price-card ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .price-card .btn {
+      display: block;
+      text-align: center;
+      padding: 0.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .price-card .btn-outline {
+      border: 1.5px solid var(--gray-200);
+      color: var(--navy);
+    }
+    .price-card .btn-outline:hover { border-color: var(--navy); background: rgba(26,44,78,0.04); }
+    .price-card.popular .btn-fill { background: var(--gold); color: var(--navy); }
+    .price-card.popular .btn-fill:hover { background: var(--gold-light); }
+
+    .pricing-note {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--gray-400);
+    }
+
+    /* HOW IT WORKS */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    @media (max-width: 800px) { .steps { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+
+    .step { text-align: center; }
+    .step-num {
+      width: 48px;
+      height: 48px;
+      background: var(--navy);
+      color: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 0 auto 1rem;
+    }
+    .step h3 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; }
+    .step p { font-size: 0.82rem; color: var(--gray-600); }
+
+    /* CTA */
+    .cta-section {
+      background: var(--navy);
+      color: var(--white);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .cta-section p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 480px;
+      margin: 0 auto 2rem;
+    }
+
+    /* CONTACT STRIP */
+    .contact-strip {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      padding: 3rem 2rem;
+    }
+    .contact-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contact-inner h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .contact-inner p {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      margin-bottom: 1.5rem;
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: var(--white);
+      color: var(--gray-800);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--navy); }
+    .contact-form textarea { resize: vertical; min-height: 100px; }
+    .contact-form button {
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      padding: 0.9rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .contact-form button:hover { background: var(--navy-light); }
+
+    /* FOOTER */
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--gray-200);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+    }
+
+    /* ANIMATIONS */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* FORM SUCCESS */
+    .form-success {
+      display: none;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--navy);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .form-success.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">Project<span>Bar</span></a>
+      <a href="#contact" class="nav-cta">Get in Touch</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Melbourne, Victoria</div>
+    <h1>Your practice. <em>Without the admin.</em></h1>
+    <p>Research, drafting, inbox management — everything that eats your day but doesn't need a barrister's judgment. Delivered by someone who understands legal workflow.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Start with a Free Task</a>
+      <a href="#how" class="btn-secondary">See how it works</a>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <p>Serving barristers across Victoria</p>
+    <div class="trust-logos">
+      <span>Commercial Law</span>
+      <span>Family Law</span>
+      <span>Criminal Law</span>
+      <span>Common Law</span>
+      <span>Public Law</span>
+    </div>
+  </div>
+
+  <!-- PROBLEM / SOLUTION -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="split-grid">
+        <div class="card">
+          <h3>The Problem</h3>
+          <p>You're solo. No in-house EA. No paralegal. Just admin stacking up while you're trying to bill — or rest.</p>
+          <ul>
+            <li>Research takes 2–4 hours per matter</li>
+            <li>Email overwhelms between hearings</li>
+            <li>Drafting simple documents eats evenings</li>
+            <li>Junior counsel is too expensive for routine work</li>
+            <li>Offshore VAs don't understand legal process</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>The Solution</h3>
+          <p>A dedicated Melbourne-based support service built for barristers. Legal-aware, human-operated, AI-assisted for speed.</p>
+          <ul>
+            <li>Research briefs delivered in 24–48 hours</li>
+            <li>Inbox triage so you see only what matters</li>
+            <li>Document drafting and formatting</li>
+            <li>Billing and scheduling support</li>
+            <li>Flat monthly cost — no timesheet shock</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section bg-light" id="services">
+    <div class="section-inner">
+      <span class="section-label">Services</span>
+      <h2>What we handle</h2>
+      <p class="sub">The work that doesn't need a barrister — but should stop eating your day.</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">⚖️</div>
+          <h3>Legal Research</h3>
+          <p>Case law, legislation, and matter briefs. Delivered clean and formatted, ready to use. AUSTLII-sourced, quality-checked.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📬</div>
+          <h3>Inbox Management</h3>
+          <p>Daily triage, prioritisation, and draft responses. You see what's urgent — the rest is handled.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📄</div>
+          <h3>Document Drafting</h3>
+          <p>Letters, submissions, court document formatting. First drafts you can review and mark up in minutes.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📅</div>
+          <h3>Scheduling</h3>
+          <p>Calendar management, deadline tracking, clerk coordination. Nothing slips through.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">💰</div>
+          <h3>Billing Support</h3>
+          <p>Time entry drafting, fee calculations, costs agreement preparation. Get paid faster, with less friction.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔍</div>
+          <h3>Precedent Tracking</h3>
+          <p>Case alerts, legislative change tracking, matter preparation. Stay current without the monitoring overhead.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="section-inner">
+      <span class="section-label">Process</span>
+      <h2>How it works</h2>
+      <p class="sub">One free task. No commitment. Then you decide if it's worth continuing.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Get in touch</h3>
+          <p>Send us a message. We'll ask a few questions about your practice.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Free trial task</h3>
+          <p>We complete one task — inbox triage or a research brief — at no charge.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>See the value</h3>
+          <p>Review the output. Tell us what was useful, what wasn't, what to improve.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h3>Start a retainer</h3>
+          <p>Agree on a plan. We become your ongoing support, month by month.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section bg-light" id="pricing">
+    <div class="section-inner">
+      <span class="section-label">Pricing</span>
+      <h2>Simple, predictable costs</h2>
+      <p class="sub">No hourly shock. No surprise invoices. A flat monthly retainer that covers what you need.</p>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Starter</h3>
+          <div class="price"><sub>$</sub>600<sub>/mo</sub></div>
+          <div class="per">10 hours / month</div>
+          <ul>
+            <li>Legal research</li>
+            <li>Inbox management</li>
+            <li>Document formatting</li>
+            <li>48-hour turnaround</li>
+            <li>Email support</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline">Get started</a>
+        </div>
+        <div class="price-card popular">
+          <span class="popular-badge">Most Popular</span>
+          <h3>Professional</h3>
+          <div class="price"><sub>$</sub>1,200<sub>/mo</sub></div>
+          <div class="per">20 hours / month</div>
+          <ul>
+            <li>Everything in Starter</li>
+            <li>Document drafting</li>
+            <li>Billing support</li>
+            <li>24-hour turnaround</li>
+            <li>Phone + email access</li>
+          </ul>
+          <a href="#contact" class="btn btn-fill">Get started</a>
+        </div>
+        <div class="price-card">
+          <h3>Premium</h3>
+          <div class="price"><sub>$</sub>2,000<sub>/mo</sub></div>
+          <div class="per">30 hours / month</div>
+          <ul>
+            <li>Everything in Professional</li>
+            <li>Same-day SLA (by 12pm)</li>
+            <li>Deadline tracking</li>
+            <li>Priority escalation</li>
+            <li>Dedicated contact</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline">Get started</a>
+        </div>
+      </div>
+      <p class="pricing-note">First month at 50% discount for new clients. No lock-in contracts.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>One free task. No strings.</h2>
+    <p>Show us an inbox or give us a research topic. If it's not useful, you owe nothing. If it is — we'll talk about what comes next.</p>
+    <a href="#contact" class="btn-primary">Start the conversation</a>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-strip" id="contact">
+    <div class="contact-inner">
+      <h2>Ready to talk?</h2>
+      <p>Fill in the form and we'll get back to you within a few hours.</p>
+      <form class="contact-form" id="contactForm">
+        <input type="text" name="name" placeholder="Your name" required />
+        <input type="email" name="email" placeholder="Email address" required />
+        <input type="text" name="area" placeholder="Area of practice (e.g. Family law, Commercial)" />
+        <textarea name="message" placeholder="Tell us what you'd like help with, or just say hello."></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+      <div class="form-success" id="formSuccess">
+        Message sent — we'll be in touch shortly.
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Project Bar &copy; 2026 &middot; Melbourne, Australia</p>
+  </footer>
+
+  <script>
+    // Scroll fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) el.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = this;
+      const data = new FormData(form);
+      fetch('https://formspree.io/f/YOUR_FORM_ID', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' }
+      }).then(() => {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      }).catch(() => {
+        // Fallback — just show success for demo
+        form.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      });
+    });
+  </script>
+</body>
+</html>
